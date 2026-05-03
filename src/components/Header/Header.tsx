@@ -1,32 +1,49 @@
-import { useNavigate } from "react-router-dom";
-import { Button } from "../Button";
-import cls from "./Header.module.css";
-import { AUTH_STORAGE } from "../../constants/global.constants";
-import { ThemeToggler } from "../../features/ThemeToggler";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import { LuCookingPot } from "react-icons/lu";
+import { LuUser, LuShoppingCart, LuHeart } from "react-icons/lu";
+import cls from "./Header.module.css";
+import { ThemeToggler } from "../../features/ThemeToggler";
 
 export const Header = () => {
   const navigate = useNavigate();
-  const { isAuth, setIsAuth } = useAuth();
-
-  const loginHandler = (): void => {
-    localStorage.setItem(AUTH_STORAGE, `${!isAuth}`);
-    setIsAuth(!isAuth);
-  };
+  const { isAuth, user, logout } = useAuth();
 
   return (
     <header className={cls.header}>
-      <div className={cls.logo} onClick={() => navigate("/")}>
-        <LuCookingPot size={32} className={cls.logoIcon} />
-        <span>RecipeCatalog</span>
-      </div>
-      <div className={cls.headerButtons}>
-        <ThemeToggler />
-        {isAuth && <Button onClick={() => navigate("/addrecipe")}>Add</Button>}
-        <Button onClick={loginHandler} isActive={!isAuth}>
-          {isAuth ? "Logout" : "Login"}
-        </Button>
+      <div className={cls.container}>
+        <Link to="/" className={cls.logo}>
+          Smart<span>Shop</span>
+        </Link>
+
+        <div className={cls.actions}>
+          <ThemeToggler />
+          <div className={cls.actionItem} onClick={() => !isAuth && navigate("/login")}>
+            <LuUser size={26} className={cls.icon} />
+            <span className={cls.actionLabel}>
+              {isAuth ? (
+                <>
+                  {user?.firstName}
+                  <button onClick={logout} className={cls.exitBtn}>
+                    (Exit)
+                  </button>
+                </>
+              ) : (
+                "Sign In"
+              )}
+            </span>
+          </div>
+          <Link to="/wishlist" className={cls.actionItem}>
+            <LuHeart size={26} className={cls.icon} />
+            <span className={cls.actionLabel}>Wishlist</span>
+          </Link>
+          <Link to="/cart" className={cls.actionItem}>
+            <div className={cls.cartWrapper}>
+              <LuShoppingCart size={26} className={cls.icon} />
+              <span className={cls.badge}>0</span>
+            </div>
+            <span className={cls.actionLabel}>Cart</span>
+          </Link>
+        </div>
       </div>
     </header>
   );

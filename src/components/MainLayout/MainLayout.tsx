@@ -1,26 +1,32 @@
 import { Outlet } from "react-router-dom";
 import cls from "./MainLayout.module.css";
-import { Header } from "../Header";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Header } from "../Header";
 
 export const MainLayout = () => {
   const currentYear = new Date().getFullYear();
+
   return (
     <>
       <div className={cls.mainLayout}>
         <Header />
-        <div className={cls.mainWrapper}>
+
+        <div className={cls.container}>
           <main className={cls.main}>
-            <Outlet></Outlet>
+            <Outlet />
           </main>
+
           <footer className={cls.footer}>
-            Recipe Catalog | {currentYear} <br />
-            by Alexandra Kurylo
+            <div className={cls.footerContent}>
+              <p>SmartShop | {currentYear}</p>
+              <p className={cls.author}>Created by Alexandra Kurylo</p>
+            </div>
           </footer>
         </div>
       </div>
 
-      <ToastContainer />
+      <ToastContainer position="bottom-right" autoClose={3000} theme="colored" />
     </>
   );
 };
